@@ -3,7 +3,7 @@ import {
   MiddlewareNext,
   ConnectClient,
 } from "@vaadin/flow-frontend/Connect";
-import { oktaSignIn } from "./auth";
+import { getAccessToken } from "./auth";
 
 const client = new ConnectClient({
   prefix: "connect",
@@ -14,7 +14,7 @@ const client = new ConnectClient({
       context: MiddlewareContext,
       next: MiddlewareNext
     ) {
-      const token = await oktaSignIn.authClient.tokenManager.get("accessToken");
+      const token = await getAccessToken();
       if (token && token.expiresAt > new Date().getTime() / 1000) {
         context.request.headers.set(
           "Authorization",

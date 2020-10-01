@@ -1,27 +1,66 @@
-// @ts-ignore
-import OktaSignIn from "@okta/okta-signin-widget";
-// TODO: 275kB min-zipped just to render a login widget?
+import { AccessToken, OktaAuth } from "@okta/okta-auth-js";
 
-// In the Okta admin panel set the following:
-//  - Application type: Single Page App (SPA)
-//  - Allowed grant types: Authorization Code
-//  - Login redirect URIs: http://localhost:8080/login
-
-export const oktaSignIn = new OktaSignIn({
-  baseUrl: "https://dev-692531.okta.com", // use your own
-  clientId: "0oa12olfwdRzTUrhQ4x7", // use your own
-  authParams: {
-    issuer: "https://dev-692531.okta.com/oauth2/default",
-    responseType: ["token", "id_token"],
-    display: "page",
-  },
+const authClient = new OktaAuth({
+  issuer: "https://dev-294650.okta.com/", // use your own
+  clientId: "0oa13ctliarM7u3D64x7", // use your own
+  redirectUri: "http://localhost:8080/callback",
+  pkce: true,
 });
 
-export async function getUserInfo() {
-  try {
-    return await oktaSignIn.authClient.token.getUserInfo();
-  } catch (error) {
-    // console.warn(`oktaSignIn.authClient.token.getUserInfo() errored: ${error}`);
-    return null;
+const isAuthenticated = async () => {
+  // Checks if there is a current accessToken in the TokenManger.
+  return !!(await authClient.tokenManager.get("accessToken"));
+};
+
+const signIn = async (username: string, password: string) => {
+  const authResult = await authClient.signIn({
+    username,
+    password,
+  });
+
+  if (authResult.status === "SUCCESS") {
+    authClient.token.getWithRedirect({
+      sessionToken: authResult.sessionToken,
+      responseType: "id_token",
+    });
+    return true;
+  } else {
+    return false;
   }
-}
+};
+
+const signOut = () => authClient.signOut();
+
+const handleAuthentication = async () => {
+  if (authClient.token.isLoginRedirect()) {
+    try {
+      const tokenResponse = await authClient.token.parseFromUrl();
+      const { accessToken, idToken } = tokenResponse.tokens;
+      if (!accessToken || !idToken) return false;
+
+      authClient.tokenManager.add("accessToken", accessToken);
+      authClient.tokenManager.add("idToken", idToken);
+      return true;
+    } catch (err) {
+      console.warn(`authClient.token.parseFromUrl() errored: ${err}`);
+      return false;
+    }
+  }
+  return false;
+};
+
+const getAccessToken = async () => {
+  const token = (await authClient.tokenManager.get(
+    "accessToken"
+  )) as AccessToken;
+
+  return token;
+};
+
+export {
+  isAuthenticated,
+  signIn,
+  signOut,
+  handleAuthentication,
+  getAccessToken,
+};

@@ -1,10 +1,12 @@
 import { Commands, Context, Route, Router } from "@vaadin/router";
 import "./views/main/main-view";
 import "./views/about/about-view";
-import { getUserInfo, oktaSignIn } from "./auth";
+import { handleAuthentication, isAuthenticated, signOut } from "./auth";
 
-const authGuard = async (_: Context, commands: Commands) => {
-  if (!(await getUserInfo())) {
+const authGuard = async (context: Context, commands: Commands) => {
+  if (!(await isAuthenticated())) {
+    // Save requested path
+    sessionStorage.setItem("login-redirect-path", context.pathname);
     return commands.redirect("/login");
   }
   return undefined;
@@ -18,14 +20,23 @@ const routes: Route[] = [
       await import(/* webpackChunkName: "login" */ "./views/login/login-view");
     },
   },
-
+  {
+    path: "/callback",
+    action: async (_: Context, commands: Commands) => {
+      if (await handleAuthentication()) {
+        commands.redirect(sessionStorage.getItem("login-redirect-path") || "/");
+      } else {
+        commands.redirect("/login");
+      }
+    },
+  },
   // First log out on the client-side, when destroy the server-side security context.
   // Server-side logging out is handled by Spring Security: it handles HTTP GET requests to
   // /logout and redirects to /login?logout in response.
   {
     path: "/logout",
     action: async (_: Context, commands: Commands) => {
-      oktaSignIn.authClient.signOut();
+      signOut();
       location.reload();
       return commands.prevent();
     },

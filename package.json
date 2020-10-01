@@ -2,6 +2,7 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "dependencies": {
+    "@okta/okta-auth-js": "^4.0.2",
     "@okta/okta-signin-widget": "^4.4.4",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
@@ -52,28 +53,28 @@
     "open": "^7.2.1"
   },
   "devDependencies": {
-    "webpack": "4.42.0",
-    "webpack-cli": "3.3.11",
-    "webpack-dev-server": "3.10.3",
-    "webpack-babel-multi-target-plugin": "2.3.3",
-    "copy-webpack-plugin": "5.1.1",
-    "webpack-merge": "4.2.2",
-    "raw-loader": "4.0.0",
-    "compression-webpack-plugin": "3.1.0",
-    "html-webpack-plugin": "3.2.0",
-    "script-ext-html-webpack-plugin": "2.1.4",
-    "awesome-typescript-loader": "5.2.1",
-    "typescript": "3.8.3",
-    "terser": "4.6.7",
-    "progress-webpack-plugin": "0.0.24",
-    "lit-element": "2.3.1",
-    "chokidar": "^3.4.0",
-    "validator": "12.0.0",
-    "lit-html": "1.2.1",
     "@types/validator": "10.11.3",
+    "awesome-typescript-loader": "5.2.1",
+    "chokidar": "^3.4.0",
+    "compression-webpack-plugin": "4.0.1",
+    "copy-webpack-plugin": "5.1.1",
     "css-loader": "4.2.1",
+    "extract-loader": "5.1.0",
+    "html-webpack-plugin": "3.2.0",
     "lit-css-loader": "0.0.3",
-    "extract-loader": "5.1.0"
+    "lit-element": "2.3.1",
+    "lit-html": "1.2.1",
+    "progress-webpack-plugin": "0.0.24",
+    "raw-loader": "4.0.0",
+    "script-ext-html-webpack-plugin": "2.1.4",
+    "terser": "4.6.7",
+    "typescript": "3.8.3",
+    "validator": "12.0.0",
+    "webpack": "4.42.0",
+    "webpack-babel-multi-target-plugin": "2.3.3",
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "4.2.2"
   },
   "vaadin": {
     "dependencies": {
@@ -127,7 +128,7 @@
     "devDependencies": {
       "webpack-babel-multi-target-plugin": "2.3.3",
       "copy-webpack-plugin": "5.1.1",
-      "compression-webpack-plugin": "3.1.0",
+      "compression-webpack-plugin": "4.0.1",
       "raw-loader": "4.0.0",
       "webpack-cli": "3.3.11",
       "webpack": "4.42.0",
@@ -148,6 +149,6 @@
       "lit-css-loader": "0.0.3",
       "extract-loader": "5.1.0"
     },
-    "hash": "6b61e3123ea10234d652871c2c338532d9b95a3f5005e903f808c7b7f9a7621c"
+    "hash": "05435f59ca474a1d4df97850823c9f9e67b1910ca61c66b7d385bb3d12e6ba57"
   }
 }
