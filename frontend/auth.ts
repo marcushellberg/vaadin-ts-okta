@@ -16,6 +16,7 @@ const signIn = async (username: string, password: string) => {
   const authResult = await authClient.signIn({
     username,
     password,
+    scopes: ["openid", "email", "profile"],
   });
 
   if (authResult.status === "SUCCESS") {
