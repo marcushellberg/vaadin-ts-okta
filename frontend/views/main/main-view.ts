@@ -6,7 +6,7 @@ import "@vaadin/vaadin-app-layout/vaadin-drawer-toggle";
 import "@vaadin/vaadin-tabs/theme/lumo/vaadin-tab";
 import "@vaadin/vaadin-tabs/theme/lumo/vaadin-tabs";
 import { CSSModule } from "@vaadin/flow-frontend/css-utils";
-import { router } from "../../index";
+import { router } from "../../routes";
 
 // Rename to something more appropriate.
 interface MenuTab {

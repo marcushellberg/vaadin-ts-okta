@@ -1,44 +1,51 @@
-# Custom project from start.vaadin.com
+# Okta authentication in a Vaadin TS app
 
-This project was created from https://start.vaadin.com. It's a fully working Vaadin application that you continue developing locally.
-It has all the necessary dependencies and files to help you get going.
+This example app shows you how to add Okta authentication to a client-side Vaadin app.
 
-The project is a standard Maven project, so you can import it to your IDE of choice. You'll need to have Java 8+ and Node.js 10+ installed.
+## Setup
 
-To run from the command line, use `mvn` and open [http://localhost:8080](http://localhost:8080) in your browser.
+- Spring Boot
+- Vaadin 17
+- TypeScript-based LitElement views
+- Okta Auth JS
+- Okta Spring Boot
 
-## Project structure
+## Pre-requisites
 
-| Directory                                  | Description                                                                                                                 |
-| :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
-| `frontend/`                                | Client-side source directory                                                                                                |
-| &nbsp;&nbsp;&nbsp;&nbsp;`index.html`       | HTML template                                                                                                               |
-| &nbsp;&nbsp;&nbsp;&nbsp;`index.ts`         | Frontend entrypoint, contains the client-side routing setup using [Vaadin Router](https://vaadin.com/router)                |
-| &nbsp;&nbsp;&nbsp;&nbsp;`main-layout.ts`   | Main layout Web Component, contains the navigation menu, uses [App Layout](https://vaadin.com/components/vaadin-app-layout) |
-| &nbsp;&nbsp;&nbsp;&nbsp;`views/`           | UI views Web Components (TypeScript)                                                                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;`styles/`          | Styles directory (CSS)                                                                                                      |
-| `src/main/java/<groupId>/`                 | Server-side source directory, contains the server-side Java views                                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;`Application.java` | Server entrypoint                                                                                                           |
+You need a https://developer.okta.com account and set up a Web app and a user for it.
 
-## What next?
+## How it works
 
-[vaadin.com](https://vaadin.com) has lots of material to help you get you started:
+### Back end
 
-- Read the [Quick Start Guide](https://vaadin.com/docs/v16/flow/typescript/quick-start-guide.html) to learn the first steps of full stack Vaadin applications development.
-- Follow the tutorials in [vaadin.com/learn/tutorials](https://vaadin.com/learn/tutorials). Especially [Building Modern Web Apps with Spring Boot and Vaadin](https://vaadin.com/learn/tutorials/modern-web-apps-with-spring-boot-and-vaadin) is good for getting a grasp of the basic Vaadin concepts.
-- Read the documentation in [vaadin.com/docs](https://vaadin.com/docs).
-- For a bigger Vaadin application example, check out the Full Stack App starter from [vaadin.com/start](https://vaadin.com/start).
+**`pom.xml`** Vaadin Spring Boot starter with the following added dependencies:
 
-## Deploying using Docker
+- spring-security-web
+- spring-security-config
+- spring-security-oauth2-resource-server
+- okta-spring-boot-starter
 
-To build the Dockerized version of the project, run
+**`SecurityConfiguration.java`** disables double csrf for the app as Vaadin handles it internally.
 
-```
-docker build . -t myapp:latest
-```
+**`application.properties`** contains the okta issuer URL
 
-Once the Docker image is correctly built, you can test it locally using
+**`ListEndpoint.java`** is a Vaadin endpoint that exposes a REST endpoint and generates TS interfaces for accessing it in a type-safe manner.
+**Note:** Vaadin endpoints require authentication by default unless you opt-out by adding a `@AnonymousAllowed` annotation to the class or metod.
 
-```
-docker run -p 8080:8080 myapp:latest
-```
+### Front end
+
+**`auth.ts`** contains the [Okta Auth JS](https://github.com/okta/okta-auth-js) configuration. It exposes an API for:
+
+- checking if a user is authenticated
+- signing in/out
+- handling login redirects
+- providing an access token for HTTP requests
+
+**`routes.ts`** defines the application routes and authentication handling.
+
+- an `authGuard` action is used to check if the user is authenticated. If not, the path is saved and the user is redirected to `/login`
+- the `/callback` route has an action that parses the response from the auth server and either redirects to the initially requested route or back to login.
+
+**`connect-client.ts`** defines a middleware that adds the access token to all server requests.
+
+**`login-view.ts`** has a login form and calls the `signIn` API that `auth.ts` exposes.
