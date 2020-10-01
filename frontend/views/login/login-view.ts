@@ -1,9 +1,18 @@
-import { css, customElement, html, LitElement } from "lit-element";
+import {
+  css,
+  customElement,
+  html,
+  internalProperty,
+  LitElement,
+} from "lit-element";
 import { signIn } from "../../auth";
 import "@vaadin/vaadin-login/vaadin-login-form";
 
 @customElement("login-view")
 export class LoginView extends LitElement {
+  @internalProperty()
+  private error = !!new URLSearchParams().get("error");
+
   static styles = css`
     :host {
       display: flex;
@@ -18,6 +27,7 @@ export class LoginView extends LitElement {
     return html`
       <vaadin-login-form
         @login=${this.login}
+        ?error=${this.error}
         noForgotPassword
       ></vaadin-login-form>
 

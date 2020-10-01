@@ -23,9 +23,6 @@ const signIn = async (username: string, password: string) => {
       sessionToken: authResult.sessionToken,
       responseType: "id_token",
     });
-    return true;
-  } else {
-    return false;
   }
 };
 

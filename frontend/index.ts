@@ -24,9 +24,11 @@ const routes: Route[] = [
     path: "/callback",
     action: async (_: Context, commands: Commands) => {
       if (await handleAuthentication()) {
-        commands.redirect(sessionStorage.getItem("login-redirect-path") || "/");
+        return commands.redirect(
+          sessionStorage.getItem("login-redirect-path") || "/"
+        );
       } else {
-        commands.redirect("/login");
+        return commands.redirect("/login?error");
       }
     },
   },
