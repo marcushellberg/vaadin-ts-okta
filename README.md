@@ -49,3 +49,9 @@ You need a https://developer.okta.com account and set up a Web app and a user fo
 **`connect-client.ts`** defines a middleware that adds the access token to all server requests.
 
 **`login-view.ts`** has a login form and calls the `signIn` API that `auth.ts` exposes.
+
+## How to run the app
+
+Make sure you have Java 11 or later and Maven installed.
+
+Start the app with `mvn` or by running `Application.java`
