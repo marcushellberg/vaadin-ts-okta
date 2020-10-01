@@ -29,7 +29,11 @@ export class LoginView extends LitElement {
   }
 
   async login(e: CustomEvent) {
-    signIn(e.detail.username, e.detail.password);
+    try {
+      await signIn(e.detail.username, e.detail.password);
+    } catch (e) {
+      this.error = true;
+    }
   }
 
   // Password managers don't like shadow root, render in light DOM
